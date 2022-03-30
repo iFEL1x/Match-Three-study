@@ -28,24 +28,28 @@
  * THE SOFTWARE.
  */
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
+    List<GameObject> matchingTiles = new List<GameObject>();
+
+    //private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
     private static Tile previousSelected = null;
     private LayerMask mask;
 
+    private Animator animator;
     private SpriteRenderer render;
     private bool isSelected = false;
     private bool matchFound = false;
 
     private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
-
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         render = GetComponent<SpriteRenderer>();
         mask = LayerMask.GetMask("Tile");
     }
@@ -55,7 +59,8 @@ public class Tile : MonoBehaviour
     private void Selected() 
     {
         isSelected = true;
-        render.color = selectedColor;
+        //render.color = selectedColor;
+        animator.SetBool("Selected", true);
         previousSelected = gameObject.GetComponent<Tile>();
         //SFXManager.Instance.PlaySFX(AnimationClip.Select);
     }
@@ -63,7 +68,9 @@ public class Tile : MonoBehaviour
     private void Deselect()
     {
         isSelected = false;
-        render.color = Color.white;
+
+        previousSelected.animator.SetBool("Selected", false);
+        //render.color = Color.white;
         previousSelected = null;
     }
 
@@ -96,6 +103,7 @@ public class Tile : MonoBehaviour
                     ClearAllMatches();
                     GUIManager.Instance.MoveCounter--; //Уменьшаем колличество ходов
                 }
+
                 else
                 {
                     previousSelected.GetComponent<Tile>().Deselect();
@@ -150,7 +158,7 @@ public class Tile : MonoBehaviour
         return adjacentTiles;
     }
 
-    //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
 
     private List<GameObject> FindMatch(Vector2 castDir) //Ищем одинаковые плитки
     {
@@ -166,9 +174,6 @@ public class Tile : MonoBehaviour
 
             hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
             hit = Physics2D.Raycast(hit.collider.transform.position, castDir, 1.0f, mask); //Проверяем нет ли еще одного такого Тайла рядом с найденным Тайлом, пока не найдет другой Тайл или его отсутствие
-
-            //if (matchingTiles.Count > 5)
-            //    break;
         }
 
         for (int i = 0; i < matchingTiles.Count; i++)
@@ -182,13 +187,13 @@ public class Tile : MonoBehaviour
 
     private void ClearMatch(Vector2[] paths) //Ищем одинаковые плитки и очищаем их
     {
-        List<GameObject> matchingTiles = new List<GameObject>(); 
+        List<GameObject> matchingTiles = new List<GameObject>();
         for (int i = 0; i < paths.Length; i++) //Ищем
         {
             matchingTiles.AddRange(FindMatch(paths[i]));
         }
 
-        if(matchingTiles.Count >= 2) //Очищаем плитки и начисляем очки
+        if (matchingTiles.Count >= 2) //Очищаем плитки и начисляем очки
         {
             for (int i = 0; i < matchingTiles.Count; i++) //Очищаем
             {
@@ -197,7 +202,7 @@ public class Tile : MonoBehaviour
             matchFound = true;
 
             if (matchingTiles.Count == 2) //Начисляем очки
-                GUIManager.Instance.Score += 25; 
+                GUIManager.Instance.Score += 25;
             if (matchingTiles.Count == 3)
                 GUIManager.Instance.Score += 50;
             if (matchingTiles.Count == 4)
