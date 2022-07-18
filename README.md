@@ -71,4 +71,4 @@ ___
 
 *Демонстрация финальной части игрового процесса:*
 
-![PLATFORMER 2D](https://github.com/iFEL1x/iFEL1x/blob/main/Resources/Image/Gif/mp4%20to%20GIH(Mathch-3).gif)
+![Mathch-3](https://github.com/iFEL1x/iFEL1x/blob/main/Resources/Image/Gif/mp4%20to%20GIH(Mathch-3).gif)
