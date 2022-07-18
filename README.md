@@ -1,7 +1,7 @@
 # <p align="center"> Match-3 DEMO</p>
 
 <div align="Center">
-    <img src = https://github.com/iFEL1x/iFEL1x/blob/main/Resources/Screenshots/Screen(Match-3)(0).png>
+    <img src = https://github.com/iFEL1x/iFEL1x/blob/main/Resources/Screenshots/Screen(Match-3)(0).png height="400">
 </div>
 
 
